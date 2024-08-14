@@ -18,7 +18,6 @@ const personagemSchema = new mongoose.Schema({
     },
     corCabelo: {
         type: String,
-        enum: ['branco', 'preto', 'loiro', 'ruivo', 'castanho', 'outro'],
         required: true
     },
     corPele: {

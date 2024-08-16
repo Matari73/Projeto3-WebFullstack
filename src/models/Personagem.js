@@ -33,7 +33,7 @@ const personagemSchema = new mongoose.Schema({
         enum: ['masculino', 'feminino', 'outro'],
         required: [true, "O gênero é obrigatório"]
     }
-});
+},{ collection: 'personagens' });
 
 const Personagem = mongoose.model('Personagem', personagemSchema);
 

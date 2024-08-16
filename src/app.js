@@ -1,5 +1,6 @@
 import express from "express";
 import conectaNaDatabase from "./config/db.js";
+import routes from "./routes/index.js";
 
 const conexao = await conectaNaDatabase();
 
@@ -11,12 +12,7 @@ conexao.once("open", () => {
     console.log("Conexao com o banco feita com sucesso!")
 })
 
-const app = express();
-app.use(express.json())
-
-
-app.get("/", (req, res) => {
-    res.status(200).send("Projeto 3 - Back-end");
-})
+const app = express()
+routes(app)
 
 export default app;

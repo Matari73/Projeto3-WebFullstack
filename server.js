@@ -1,7 +1,13 @@
-import app from "./src/app.js"
-import "dotenv/config"
+import fs from "fs";
+import https from "https";
+import "dotenv/config";
+import app from "./src/app.js"; 
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log("Servidor escutando...")
-})
+const options = {
+    key: fs.readFileSync("./src/certificados/server.key"),
+    cert: fs.readFileSync("./src/certificados/server.cert")
+};
+
+https.createServer(options, app).listen(3001, () => {
+    console.log("Servidor HTTPS escutando na porta 3001...");
+});

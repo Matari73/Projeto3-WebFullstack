@@ -6,7 +6,7 @@ class PersonagemController {
         try {
             const listaPersonagens = await personagem.find({});
             res.status(200).json(listaPersonagens);
-        } catch (error) {
+        } catch (erro) {
             res.status(500).json({ message: `${erro.message} - falha ao listar personagens` });
         }
     }

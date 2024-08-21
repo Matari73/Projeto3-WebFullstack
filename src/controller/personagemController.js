@@ -1,4 +1,5 @@
 import personagem from "../models/Personagem.js";
+import cache from "../config/redisClient.js";
 
 class PersonagemController {
 
@@ -31,6 +32,13 @@ class PersonagemController {
     static async criarPersonagem(req, res) {
         try {
             const novoPersonagem = await personagem.create(req.body);
+            cache.del(`/personagem`, (err) => {
+                if (err) {
+                  console.error('Erro ao invalidar cache:', err.message);
+                } else {
+                  console.log(`Cache invalidado para /personagem`);
+                }
+            });
             res.status(200).json({ message: "Criado com sucesso.", personagem: novoPersonagem });
         } catch (erro) {
             if (erro.name === 'ValidationError') {

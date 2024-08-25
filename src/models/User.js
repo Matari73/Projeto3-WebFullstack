@@ -1,5 +1,5 @@
-import mongoose from "mongoose"
-import bcrypt from "bcrypt"
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
     nome: {
@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
         required: [true, "O email é obrigatório"],
         unique: true,
         trim: true,
-        lowercase: true
+        lowercase: true,
+        match: [/.+@.+\..+/, "Por favor, insira um email válido"]
     },
     senha: {
         type: String,
@@ -25,7 +26,7 @@ userSchema.pre('save', async function (next) {
         return next();
     }
     try {
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(12);
         this.senha = await bcrypt.hash(this.senha, salt);
         next();
     } catch (error) {

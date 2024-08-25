@@ -9,7 +9,8 @@ const personagemSchema = new mongoose.Schema({
     altura: {
         type: Number,
         required: [true, "A altura é obrigatória"],
-        min: [0, "A altura deve ser um valor positivo"]
+        min: [0, "A altura deve ser um valor positivo"],
+        max: [300, "Altura não pode ser maior que 300 cm"] 
     },
     massa: {
         type: Number,

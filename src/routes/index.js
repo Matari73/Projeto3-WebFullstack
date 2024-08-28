@@ -5,8 +5,14 @@ import users from "./usersRoutes.js";
 import limiter from "../middleware/limiter.js";
 import logger from "../services/logger.js";
 import expressWinston from "express-winston";
+import cors from 'cors';
 
 const routes = (app) => {
+    app.use(cors({
+        origin: 'http://localhost:5173', 
+        methods: ['GET', 'POST'],
+        credentials: true, 
+    }));
     app.use(express.json());
     app.use(limiter);
     app.use(cookieParser());
@@ -19,7 +25,6 @@ const routes = (app) => {
         expressFormat: true,
         colorize: false,
     }));
-
     app.use(expressWinston.errorLogger({
         winstonInstance: logger,
         meta: true,

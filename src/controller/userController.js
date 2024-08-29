@@ -28,7 +28,6 @@ class UserController {
 
     static async login(req, res) {
         const { email, senha } = req.body;
-
         if (!email || !senha) {
             logger.error("Email ou senha não inseridos");
             return res.status(400).json({ message: "Email e senha são obrigatórios." });
@@ -52,7 +51,7 @@ class UserController {
             logger.info("Login bem sucedido", { user: { email: userEncontrado.email, nome: userEncontrado.nome } });
             res.status(200).json({
                 message: "Login bem sucedido!",
-                user: { email: userEncontrado.email, nome: userEncontrado.nome },
+                token
             });
         } catch (error) {
             logger.error("Erro durante o login:", { error: error.message, stack: error.stack });

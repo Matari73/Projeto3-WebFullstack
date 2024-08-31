@@ -1,10 +1,13 @@
 import personagem from "../models/Personagem.js";
 import cache from "../config/redisClient.js";
 import logger from "../services/logger.js";
+import jwt from "jsonwebtoken";
+
+const CACHE_KEY_PERSONAGEM_LIST = 'personagem_list';
 
 class PersonagemController {
 
-    static async listarPersonagem(req, res) {
+    static async listarPersonagens(req, res) {
         try {
             const listaPersonagens = await personagem.find({});
             logger.info("Listagem de personagens bem sucedida", { personagens: listaPersonagens.length });
@@ -38,16 +41,20 @@ class PersonagemController {
 
     static async criarPersonagem(req, res) {
         try {
+            logger.info("Iniciando a criação de personagem.", { cookies: req.cookies });
             const novoPersonagem = await personagem.create(req.body);
-            cache.del(`/personagem`, (err) => {
+            cache.del(CACHE_KEY_PERSONAGEM_LIST, (err) => {
                 if (err) {
                     logger.error("Erro ao invalidar cache após criar personagem", { error: err.message });
                 } else {
-                    logger.info("Cache invalidado para /personagem após criar personagem");
+                    logger.info("Cache invalidado para 'personagem_list' após criar personagem");
                 }
             });
+
             logger.info("Novo personagem criado com sucesso", { personagem: novoPersonagem });
-            res.status(200).json({ message: "Criado com sucesso.", personagem: novoPersonagem });
+            const token = jwt.sign({ id: req.user._id, email: req.user.email }, process.env.SECRET_KEY, { expiresIn: '15m' });
+            res.cookie('auth-token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'None', maxAge: 15 * 60 * 1000 });
+            res.status(201).json({ message: "Personagem criado com sucesso.", personagem: novoPersonagem, token: token });
         } catch (erro) {
             if (erro.name === 'ValidationError') {
                 logger.error("Erro de validação ao criar personagem", { errors: erro.errors, originalError: erro.message });

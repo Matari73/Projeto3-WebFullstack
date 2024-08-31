@@ -7,28 +7,30 @@ const CACHE_KEY_PERSONAGEM_LIST = 'personagem_list';
 
 class PersonagemController {
 
-    static async listarPersonagens(req, res) {
-        try {
-            const listaPersonagens = await personagem.find({});
-            logger.info("Listagem de personagens bem sucedida", { personagens: listaPersonagens.length });
-            res.status(200).json(listaPersonagens);
-        } catch (erro) {
-            logger.error("Falha ao listar personagens", { error: erro.message });
-            res.status(500).json({ message: `${erro.message} - falha ao listar personagens` });
-        }
-    }
+    // static async listarPersonagens(req, res) {
+    //     try {
+    //         const listaPersonagens = await personagem.find({});
+    //         logger.info("Listagem de personagens bem sucedida", { personagens: listaPersonagens.length });
+    //         res.status(200).json(listaPersonagens);
+    //     } catch (erro) {
+    //         logger.error("Falha ao listar personagens", { error: erro.message });
+    //         res.status(500).json({ message: `${erro.message} - falha ao listar personagens` });
+    //     }
+    // }
 
     static async buscarPersonagem(req, res) {
-        const { nome } = req.body;
+        const { nome } = req.query;
         if (!nome) {
-            logger.warn("Nome não fornecido para busca.");
+            logger.info("Nome não fornecido para busca.");
             return res.status(400).json({ message: "O nome é obrigatório para a busca." });
         }
-
+        const nomeSanitizado = nome.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(nomeSanitizado, 'i');
+        logger.info("RegExp construída:", { regex: regex.toString() });
         try {
-            const personagens = await personagem.find({ nome: new RegExp(nome, 'i') });
+            const personagens = await personagem.find({ nome: regex });    
             if (personagens.length === 0) {
-                logger.info("Nenhum personagem encontrado para o nome:", { nome });
+                logger.info("Nenhum personagem encontrado para o nome", { nome });
                 return res.status(404).json({ message: "Nenhum personagem encontrado." });
             }
             logger.info("Personagens encontrados com sucesso", { nome, quantidade: personagens.length });

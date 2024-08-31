@@ -13,9 +13,9 @@ const routes = (app) => {
         methods: ['GET', 'POST'],
         credentials: true, 
     }));
+    app.use(cookieParser());
     app.use(express.json());
     app.use(limiter);
-    app.use(cookieParser());
     app.use(personagens);
     app.use(users);
     app.use(expressWinston.logger({

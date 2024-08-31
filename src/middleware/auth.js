@@ -3,6 +3,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 function authenticateToken(req, res, next) {
     const token = req.cookies['auth-token'];
+    console.log('Token recebido:', token);
     if (!token) {
         return res.status(401).json({
             message: "Token não fornecido."

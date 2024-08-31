@@ -47,7 +47,7 @@ class UserController {
             }
 
             const token = jwt.sign({ id: userEncontrado._id, email: userEncontrado.email }, SECRET_KEY, { expiresIn: '15m' });
-            res.cookie('auth-token', token, { httpOnly: true, secure: false });
+            res.cookie('auth-token', token, { httpOnly: true, secure: false, sameSite:'None'});
             logger.info("Login bem sucedido", { user: { email: userEncontrado.email, nome: userEncontrado.nome } });
             res.status(200).json({
                 message: "Login bem sucedido!",

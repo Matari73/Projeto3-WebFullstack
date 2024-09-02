@@ -39,7 +39,7 @@ Este é o backend do Projeto 3 da disciplina de Programação Web Fullstack. O b
 
 4. **Configure as variáveis de ambiente:**
    Crie um arquivo `.env` na raiz do projeto e adicione as seguintes variáveis:
-
+    ```text
     DB_CONNECTION_STR
     SECRET_KEY
     REDIS_HOST
